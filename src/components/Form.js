@@ -34,6 +34,12 @@ class CustomForm extends React.Component {
               })
               .then(response => console.log(response))
               .catch(error => console.log(error));
+
+          default:
+            return {
+              title: title,
+              content: content
+            }
       }
 
     }

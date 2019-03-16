@@ -1,14 +1,17 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import { Layout, Menu, Breadcrumb } from 'antd';
+import * as actions from '../store/action/auth';
 
 
 const { Header, Content, Footer } = Layout;
 
-const CustomLayout = (props) => {
+class CustomLayout extends Component {
   
-  return(
+  render() {
+
+    return (
 
       <Layout className="layout">
         <Header>
@@ -19,9 +22,18 @@ const CustomLayout = (props) => {
             defaultSelectedKeys={['2']}
             style={{ lineHeight: '64px' }}
           >
-            <Menu.Item key="1">nav 1</Menu.Item>
-            <Menu.Item key="2">nav 2</Menu.Item>
-            <Menu.Item key="3">nav 3</Menu.Item>
+          {
+            this.props.isAuthenticated ?
+              <Menu.Item key="2" onClick={this.props.logout}>LogOut</Menu.Item>
+            :
+            <Menu.Item key="2">
+              <Link to="/login">Login</Link>
+            </Menu.Item>
+          }
+            <Menu.Item key="1">
+              <Link to="/">Posts</Link>
+            </Menu.Item>
+            
           </Menu>
         </Header>
         <Content style={{ padding: '0 50px' }}>
@@ -29,14 +41,30 @@ const CustomLayout = (props) => {
             <Breadcrumb.Item><Link to='/'>Home</Link></Breadcrumb.Item>
             <Breadcrumb.Item><Link to='/'>List</Link></Breadcrumb.Item>
           </Breadcrumb>
-          <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>{props.children}</div>
+          <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>{this.props.children}</div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           Ant Design ©2018 Created by Ant UED
         </Footer>
       </Layout>
-  )
+    )
+
+  }  
 
 }
 
-export default CustomLayout;
+
+// const mapStateToProps = (state) => {
+//   return {
+//     loading: state.loading,
+//     error: state.error
+//   }
+// }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => dispatch(actions.logout())
+  }
+}
+
+export default withRouter(connect(null, mapDispatchToProps)(CustomLayout));
